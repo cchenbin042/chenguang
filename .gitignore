@@ -1,0 +1,33 @@
+# 环境变量（含真实密码，禁止提交）
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# 测试与缓存
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# 日志
+logs/
+*.log
+
+# 本地数据与挂载目录
+docker/mysql/data/
+docker/mysql/init/
+docker/redis_data/
+docker/minio_data/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+.DS_Store
