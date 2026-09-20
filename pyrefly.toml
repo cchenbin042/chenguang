@@ -1,0 +1,5 @@
+python-interpreter = "D:\\software\\tool\\conda\\envs\\chenguang\\python.exe"
+
+# 项目使用 `from src.xxx import ...` 的绝对导入，导入根应为项目根目录，
+# 否则 Pyrefly 会把 src 当作导入根，去找 src/src/xxx 而报 missing-import
+search-path = ["."]

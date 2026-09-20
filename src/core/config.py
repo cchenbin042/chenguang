@@ -7,12 +7,19 @@ class Settings(BaseSettings):
     APP_ENV: str = "development"
     APP_DEBUG: bool = True
     APP_VERSION: str = "1.0.0"
+    # JWT 签名密钥：必须写在 .env 里；留空时 jwt_utils 会直接报错
+    JWT_SECRET_KEY: str = ""
 
     DB_HOST: str = "127.0.0.1"
     DB_PORT: int = 3306
     DB_USER: str = "root"
     DB_PASSWORD: str = ""
     DB_NAME: str = "myapp"
+
+    REDIS_HOST: str = "127.0.0.1"
+    REDIS_PORT: int = 6379
+    REDIS_PASSWORD: str = ""
+    REDIS_DB: int = 0
 
     LOG_LEVEL: str = "DEBUG"
     LOG_DIR: str = "logs"
