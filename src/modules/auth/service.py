@@ -1,17 +1,16 @@
+from datetime import datetime
+
 from redis.asyncio import Redis
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.sql.functions import user
 
-from core.exceptions import BizException
-from modules.captcha.service import CaptchaService
-from modules.user.model import User
-from modules.user.repository import UserRepository
-from src.modules.captcha.schema import CaptchaVerifyRequest
+from src.core.exceptions import BizException
 from src.modules.auth.schema import AuthLoginRequest, AuthLoginResponse
-from src.core.base_schema import ResponseSchema
-from src.utils.password_utils import verify_password
+from src.modules.captcha.schema import CaptchaVerifyRequest
+from src.modules.captcha.service import CaptchaService
+from src.modules.user.model import User
+from src.modules.user.repository import UserRepository
 from src.utils.jwt_utils import encode_jwt
-from datetime import datetime
+from src.utils.password_utils import verify_password
 class AuthService:
     def __init__(self, db: AsyncSession,redis:Redis):
         self.db =db

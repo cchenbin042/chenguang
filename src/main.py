@@ -33,6 +33,7 @@ def create_app() -> FastAPI:
                   version=settings.APP_VERSION,
                   debug=settings.APP_DEBUG)
     # 注册中间件
+    app.add_middleware(LoggingMiddleware)
 
     # 注册异常处理函数
     register_exception_handlers(app)
