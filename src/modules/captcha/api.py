@@ -15,7 +15,7 @@ def get_captcha_service(redis:Redis = Depends(get_redis_client)) -> CaptchaServi
 
 
 # 获取验证码
-@router.get("",response_model=ResponseSchema[CaptchaResponse])
+@router.get("",response_model=ResponseSchema[CaptchaResponse],summary="获取验证码")
 async def get_captcha(
     svc: CaptchaService = Depends(get_captcha_service)
 ) -> ResponseSchema[CaptchaResponse]:

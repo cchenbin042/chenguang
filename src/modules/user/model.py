@@ -1,6 +1,7 @@
-from sqlalchemy import String
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import String, DateTime
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from src.core.base_model import BaseModel
+from src.modules.role.model import Role, user_roles
 
 
 class User(BaseModel):
@@ -10,3 +11,12 @@ class User(BaseModel):
     email: Mapped[str] = mapped_column(String(100), unique=True, index=True, comment="邮箱")
     hashed_password: Mapped[str] = mapped_column(String(255), comment="密码哈希")
     is_active: Mapped[bool] = mapped_column(default=True, comment="是否启用")
+    is_superuser: Mapped[bool] = mapped_column(default=False, comment="是否为超级管理员")
+    last_login: Mapped[DateTime | None] = mapped_column(DateTime, nullable=True, comment="最后登录时间")
+    # 定义 user.roles 属性，用于获取用户的角色列表
+    roles: Mapped[list["Role"]] = relationship(
+        "Role",
+        secondary=user_roles,
+        lazy="selectin",
+        # backref="users",
+    )

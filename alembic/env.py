@@ -38,6 +38,8 @@ if config.config_file_name is not None:
 from src.core.base_model import Base
 # 每次新增一个模块，都需要在 env.py 中导入该模块的模型
 import src.modules.user.model
+import src.modules.role.model
+import src.modules.permission.model
 target_metadata = Base.metadata
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
