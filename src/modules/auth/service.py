@@ -11,6 +11,8 @@ from src.modules.user.model import User
 from src.modules.user.repository import UserRepository
 from src.utils.jwt_utils import encode_jwt
 from src.utils.password_utils import verify_password
+from loguru import logger
+
 class AuthService:
     def __init__(self, db: AsyncSession,redis:Redis):
         self.db =db
@@ -19,6 +21,8 @@ class AuthService:
     
     async def login(self, data: AuthLoginRequest) -> AuthLoginResponse:
         # 1 检验验证码
+        # 只记 key，不记验证码明文
+        logger.info(f"校验验证码, key: {data.captcha_key}")
         captcha_verify_request = CaptchaVerifyRequest(
             key= data.captcha_key,
             code = data.captcha_code

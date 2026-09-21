@@ -49,20 +49,31 @@ class CaptchaService:
         b64 = base64.b64encode(image_data.read()).decode()
         return CaptchaResponse(key=key,image=f"data:image/png;base64,{b64}")
 
+    def _build_key(self, raw_key: str) -> str:
+        """
+        拼出 Redis 里的真实 key。
+        create_captcha 返回的 key 已经带前缀，调用方大概率原样回传，
+        所以先剥掉可能已存在的前缀再拼一次，避免出现 captcha:captcha:xxx
+        """
+        captcha_id = raw_key.removeprefix(self.CAPTCHA_KEY_PREFIX)
+        return f"{self.CAPTCHA_KEY_PREFIX}{captcha_id}"
+
     async def verify_captcha(self,captcha: CaptchaVerifyRequest) -> bool:
         """
         校验验证码
         """
         # 1、从验证码的key中获取验证码
-        key: str = f"{self.CAPTCHA_KEY_PREFIX}{captcha.key}"
+        key: str = self._build_key(captcha.key)
         code: str = await self.redis.get(key)
-        logger.info(f"验证码key: {key},验证码: {code}")
+        logger.info(f"验证码key: {key}")
 
         if code is None:
             raise BizException(code=1001,message="验证码不存在或已过期")
-        # 2、校验验证码是否正确
+
+        # 2、验证码是一次性的：校验前就删掉，避免输错后同一个key还能被反复试
+        await self.redis.delete(key)
+
+        # 3、校验验证码是否正确
         if code.lower() != captcha.code.lower():
             raise BizException(code=1002,message="验证码错误")
-        # 3、删除已经使用的的验证码
-        await self.redis.delete(key)
         return True
