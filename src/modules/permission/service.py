@@ -49,9 +49,10 @@ class PermissionService:
 
         return await self.repo.update(permission_db)
 
-    async def delete_permission(self,permission_id:int) -> None:
-        """删除权限"""
+    async def delete_permission(self,permission_id:int) -> Permission:
+        """删除权限，返回被删除的权限对象"""
         permission = await self.repo.get_by_id(permission_id)
         if not permission:
             raise BizException(code=4004,message="权限不存在")
         await self.repo.delete(permission)
+        return permission
