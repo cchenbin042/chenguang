@@ -1,3 +1,5 @@
+from core.base_schema import PageResult
+from core.deps import PageParams
 from src.core.exceptions import BizException
 from src.modules.role.schema import RoleUpdate
 from src.modules.role.model import Role
@@ -29,9 +31,9 @@ class RoleService:
             raise BizException(f"角色 {role_id} 不存在")
         return role
 
-    async def list_roles(self) -> list[Role]:
-        roles = await self.repo.get_all()
-        return roles
+    # async def list_roles(self) -> list[Role]:
+    #     roles = await self.repo.get_all()
+    #     return roles
 
     async def update_role(self, role_id: int, data: RoleUpdate) -> Role:
         # 查不到抛异常
@@ -71,3 +73,17 @@ class RoleService:
         await self.repo.update(role)
         # 6. 返回更新后的 role（会自动带上新的 permissions）
         return role
+
+    async def list_roles(self, params: PageParams) -> PageResult:
+        """获取权限列表"""
+        items, total = await  self.repo.search_page(
+            offset=params.offset,
+            limit=params.page_size,
+            keyword=params.keyword
+        )
+        return PageResult(
+            items=items,
+            total=total,
+            page=params.page,
+            page_size=params.page_size
+        )

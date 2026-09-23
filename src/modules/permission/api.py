@@ -4,9 +4,10 @@ from fastapi.params import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import defer
 
+from core.deps import PageParams
 from src.infra.database import get_async_session
 from src.modules.permission.service import PermissionService
-from src.core.base_schema import ResponseSchema
+from src.core.base_schema import ResponseSchema, PageResult
 from src.modules.permission.schema import PermissionRead, PermissionCreate, PermissionUpdate
 
 router = APIRouter(prefix="/permissions", tags=["权限管理"])
@@ -24,13 +25,22 @@ async def get_permission(permission_id:int,
     return ResponseSchema[PermissionRead](data=data)
 
 
-@router.get("/",response_model=ResponseSchema[list[PermissionRead]],summary="获取权限列表")
-async def get_permissions(svc:PermissionService = Depends(get_permission_service)):
-    """获取权限列表"""
-    permissions = await svc.list_permissions()
-    data = [PermissionRead.model_validate(permission) for permission in permissions]  # 行内写法，列表推导式
-    return ResponseSchema[list[PermissionRead]](data=data)
+# @router.get("/",response_model=ResponseSchema[list[PermissionRead]],summary="获取权限列表")
+# async def get_permissions(svc:PermissionService = Depends(get_permission_service)):
+#     """获取权限列表"""
+#     permissions = await svc.list_permissions()
+#     data = [PermissionRead.model_validate(permission) for permission in permissions]  # 行内写法，列表推导式
+#     return ResponseSchema[list[PermissionRead]](data=data)
 
+@router.get("/", response_model=ResponseSchema[PageResult[PermissionRead]], summary="获取权限列表")
+async def list_users(
+    params: PageParams = Depends(),
+    svc: PermissionService = Depends(get_permission_service),
+):
+    # 需要把 ORM 对象转成 Pydantic 对象
+    page_result = await svc.list_permissions(params)
+    page_result.items = [PermissionRead.model_validate(u) for u in page_result.items]
+    return ResponseSchema(data=page_result)
 
 @router.post("",response_model=ResponseSchema[PermissionRead],summary="创建权限")
 async def create_permission(data:PermissionCreate,

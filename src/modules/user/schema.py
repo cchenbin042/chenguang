@@ -1,7 +1,7 @@
 # 该模块是主要是该前端返回pydantic模型的定义
 from pydantic import BaseModel, EmailStr
 
-from modules.role.schema import RoleRead
+from src.modules.role.schema import RoleRead
 
 
 class UserCreate(BaseModel):

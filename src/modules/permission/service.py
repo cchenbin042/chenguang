@@ -1,5 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from core.base_schema import PageResult
+from core.deps import PageParams
 from src.core.exceptions import BizException
 from src.modules.permission.model import Permission
 from src.modules.permission.schema import PermissionCreate,PermissionUpdate
@@ -56,3 +58,17 @@ class PermissionService:
             raise BizException(code=4004,message="权限不存在")
         await self.repo.delete(permission)
         return permission
+
+    async def list_permissions(self,params:PageParams) -> PageResult:
+        """获取权限列表"""
+        items,total = await  self.repo.search_page(
+            offset=params.offset,
+            limit=params.page_size,
+            keyword=params.keyword
+        )
+        return PageResult(
+            items=items,
+            total=total,
+            page=params.page,
+            page_size=params.page_size
+        )

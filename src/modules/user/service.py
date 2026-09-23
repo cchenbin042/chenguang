@@ -1,6 +1,8 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from modules.role.repository import RoleRepository
+from src.core.base_schema import PageResult
+from src.core.deps import PageParams
+from src.modules.role.repository import RoleRepository
 from src.core.exceptions import BizException
 from src.modules.user.model import User
 from src.modules.user.schema import UserCreate
@@ -32,8 +34,21 @@ class UserService:
             raise BizException(code=404, message="用户不存在")
         return user
 
-    async def list_users(self, offset: int = 0, limit: int = 100):
-        return await self.repo.get_all(offset=offset, limit=limit)
+    # 注意：这里不能写 PageResult[User]，User 是 ORM 类、不是 Pydantic 模型，
+    # 泛型下标会在定义时触发 PydanticSchemaGenerationError。ORM 对象先装进 items，由 api 层转 UserRead
+    async def list_users(self,params:PageParams) -> PageResult:
+
+        items,total = await  self.repo.search_page(
+            offset=params.offset,
+            limit=params.page_size,
+            keyword=params.keyword
+        )
+        return PageResult(
+            items=items,
+            total=total,
+            page=params.page,
+            page_size=params.page_size
+        )
 
    # 分配角色
     async def assign_roles(self, user_id: int, role_ids: list[int]) -> User:

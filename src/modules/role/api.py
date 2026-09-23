@@ -1,6 +1,7 @@
+from core.deps import PageParams
 from src.modules.role.schema import RoleAssignPermissions
 from src.modules.permission.schema import PermissionRead
-from src.core.base_schema import ResponseSchema
+from src.core.base_schema import ResponseSchema, PageResult
 from src.modules.role.schema import RoleRead
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -32,10 +33,13 @@ async def get_role(role_id: int, service: RoleService = Depends(get_role_service
     return ResponseSchema[RoleRead](data=rd)
 
 # GET   /api/v1/roles   角色列表
-@router.get("/roles", response_model=ResponseSchema[list[RoleRead]], summary="获取角色列表")
-async def get_roles(service: RoleService = Depends(get_role_service)):
-    data = await service.list_roles()
-    return ResponseSchema[list[RoleRead]](data=[RoleRead.model_validate(r) for r in data])
+@router.get("/roles", response_model=ResponseSchema[PageResult[PermissionRead]], summary="获取角色列表")
+async def get_roles(service: RoleService = Depends(get_role_service),
+                    params:PageParams = Depends()):
+    page_result = await service.list_roles(params)
+    # 映射pydatic类型
+    page_result.items = [RoleRead.model_validate(u) for u in page_result.items]
+    return ResponseSchema(data=page_result)
 
 # PUT   /api/v1/roles/{role_id} 更新角色
 @router.put("/roles/{role_id}", response_model=ResponseSchema[RoleRead], summary="更新角色")
