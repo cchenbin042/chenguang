@@ -10,6 +10,7 @@
 - shadcn/ui + Tailwind CSS；
 - React Router 管理前端路由；
 - TanStack Query 管理服务端数据、缓存和刷新；
+- TanStack Table 管理数据表格状态；
 - React Hook Form + Zod 管理表单与校验；
 - Vitest + React Testing Library 测试核心行为；
 - 手写类型化 API 客户端，不生成 OpenAPI 客户端代码。
@@ -76,6 +77,17 @@
 
 设计目标是成熟、克制、信息优先的企业后台，避免常见 AI 生成感。
 
+**Design Read:** Reading this as: a B/S administration product for internal operators, with a serious, restrained, information-dense language, leaning toward a customized shadcn/ui system with charcoal neutrals and one amber accent.
+
+本项目按用户要求应用 `design-taste-frontend`。该技能本身声明不专门服务于管理后台和数据表格，因此只采用其中与本项目匹配的反模板化原则、色彩和形状锁定、交互状态、可访问性及最终检查规则；数据表格仍由 TanStack Table 和 shadcn/ui 实现。
+
+- `DESIGN_VARIANCE: 4`：布局稳定但避免机械式卡片堆叠；
+- `MOTION_INTENSITY: 2`：只保留 hover、focus、active 和抽屉过渡；
+- `VISUAL_DENSITY: 7`：适合后台表格、筛选器和批量选择；
+- 固定浅色主题，不在同一页面切换主题；
+- 只使用一个图标家族，优先 Phosphor，不手绘 SVG；
+- 所有用户可见文案禁用 em dash 和 en dash 字符。
+
 - 中性灰、墨色和白色为主，暖金色只用于主操作、焦点和当前导航；
 - 普通内容不使用渐变、玻璃拟态、光晕和装饰性插画；
 - 圆角控制在 6–8px；
@@ -85,6 +97,9 @@
 - 表格采用紧凑密度，工具栏与分页位置保持稳定；
 - 登录页使用单列窄表单，不做营销式左右分屏；
 - 不使用虚假图表、巨型数字、胶囊标签堆叠或宣传性文案。
+- 所有主按钮、表单控件、状态色和焦点环达到 WCAG AA 对比度；
+- 所有按钮文本在桌面宽度下保持单行；
+- 页面完成前执行 taste-skill Pre-Flight Check，并把不适用于管理后台的营销页检查项标记为不适用及原因。
 
 ## 6. 组件设计
 
