@@ -7,7 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 const LoginPage = lazy(() => import("@/features/auth/login-page").then(({ LoginPage }) => ({ default: LoginPage })))
 const OverviewPage = lazy(() => import("@/features/overview/overview-page").then(({ OverviewPage }) => ({ default: OverviewPage })))
 const UsersPage = lazy(() => import("@/features/users/users-page").then(({ UsersPage }) => ({ default: UsersPage })))
-const RolesPage = lazy(() => import("./placeholder-pages").then(({ RolesPage }) => ({ default: RolesPage })))
+const RolesPage = lazy(() => import("@/features/roles/roles-page").then(({ RolesPage }) => ({ default: RolesPage })))
 const PermissionsPage = lazy(() => import("./placeholder-pages").then(({ PermissionsPage }) => ({ default: PermissionsPage })))
 
 function RouteFallback() {
