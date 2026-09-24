@@ -58,6 +58,28 @@ describe("apiRequest", () => {
     })
   })
 
+  it("does not retain sensitive fields from FastAPI validation issues", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(jsonResponse({
+      detail: [{
+        loc: ["body", "password"],
+        msg: "Field required",
+        type: "missing",
+        input: { password: "secret-password" },
+        ctx: { supplied: "secret-password" },
+      }],
+    }, 422)))
+
+    try {
+      await apiRequest("/api/v1/auth/login")
+      expect.fail("Expected an ApiError")
+    } catch (error) {
+      expect(error).toBeInstanceOf(ApiError)
+      expect((error as ApiError).issues).toEqual([
+        { loc: ["body", "password"], msg: "Field required", type: "missing" },
+      ])
+    }
+  })
+
   it("adds bearer token when available", async () => {
     authStorage.setToken("jwt-token")
     const fetchMock = vi.fn().mockResolvedValue(jsonResponse({ code: 200, message: "success", data: null }))

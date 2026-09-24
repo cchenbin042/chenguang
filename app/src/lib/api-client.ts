@@ -10,11 +10,15 @@ function asRecord(value: unknown): Record<string, unknown> | null {
 function validationIssues(value: unknown): ValidationIssue[] {
   if (!Array.isArray(value)) return []
 
-  return value.filter((issue): issue is ValidationIssue => {
+  return value.flatMap((issue): ValidationIssue[] => {
     const record = asRecord(issue)
-    return record !== null && Array.isArray(record.loc) &&
-      record.loc.every((part) => typeof part === "string" || typeof part === "number") &&
-      typeof record.msg === "string" && typeof record.type === "string"
+    if (
+      record === null || !Array.isArray(record.loc) ||
+      !record.loc.every((part) => typeof part === "string" || typeof part === "number") ||
+      typeof record.msg !== "string" || typeof record.type !== "string"
+    ) return []
+
+    return [{ loc: [...record.loc], msg: record.msg, type: record.type }]
   })
 }
 
