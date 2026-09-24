@@ -6,10 +6,6 @@ function PlaceholderPage({ title }: { title: string }) {
   )
 }
 
-export function UsersPage() {
-  return <PlaceholderPage title="用户" />
-}
-
 export function RolesPage() {
   return <PlaceholderPage title="角色" />
 }
