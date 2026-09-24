@@ -17,11 +17,13 @@ import { loginSchema, type LoginFormValues } from "./schemas"
 type LoginLocationState = { from?: string } | null
 
 function CaptchaPreview({ status, image }: { status: "pending" | "error" | "ready"; image?: string }) {
+  const [decodeFailed, setDecodeFailed] = useState(false)
+
   if (status === "pending") {
     return <Skeleton className="h-8 w-[108px] shrink-0" />
   }
 
-  if (status === "error" || !image) {
+  if (status === "error" || !image || decodeFailed) {
     return <span className="w-[108px] shrink-0 text-xs text-destructive">验证码加载失败</span>
   }
 
@@ -31,6 +33,7 @@ function CaptchaPreview({ status, image }: { status: "pending" | "error" | "read
       alt="验证码图片"
       width={108}
       height={36}
+      onError={() => setDecodeFailed(true)}
       className="h-8 w-[108px] shrink-0 border border-border"
     />
   )
@@ -127,7 +130,8 @@ export function LoginPage() {
                   aria-describedby={errors.captcha_code ? "login-captcha-error" : undefined}
                   {...register("captcha_code")}
                 />
-                <CaptchaPreview status={captchaStatus} image={captcha.data?.image} />
+                {/* 换一张验证码就重挂载，顺带清掉上一张的图片解码失败状态 */}
+                <CaptchaPreview key={captchaKey ?? "none"} status={captchaStatus} image={captcha.data?.image} />
                 <Button
                   type="button"
                   variant="outline"

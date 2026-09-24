@@ -1,6 +1,7 @@
 import * as React from "react"
 
-const MOBILE_BREAKPOINT = 768
+// 管理后台以桌面为主：1024px 及以上固定侧栏，以下改用 Sheet 抽屉
+const MOBILE_BREAKPOINT = 1024
 const mobileQuery = `(max-width: ${MOBILE_BREAKPOINT - 1}px)`
 
 function subscribe(onChange: () => void) {

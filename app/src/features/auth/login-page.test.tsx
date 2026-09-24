@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest"
-import { render, screen, waitFor } from "@testing-library/react"
+import { render, screen, waitFor, fireEvent } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { http } from "msw"
 import { MemoryRouter, Route, Routes, useLocation } from "react-router-dom"
@@ -128,6 +128,16 @@ describe("LoginPage", () => {
     expect(screen.getByLabelText("用户名")).toHaveValue("admin")
     expect(authStorage.getToken()).toBeNull()
     expect(screen.getByTestId("location")).toHaveTextContent("/login")
+  })
+
+  it("falls back to a message when the captcha image cannot be decoded", async () => {
+    renderLogin()
+
+    const image = await screen.findByRole("img", { name: "验证码图片" })
+    fireEvent.error(image)
+
+    expect(await screen.findByText("验证码加载失败")).toBeInTheDocument()
+    expect(screen.queryByRole("img", { name: "验证码图片" })).not.toBeInTheDocument()
   })
 
   it("blocks submission and shows field errors when the form is empty", async () => {

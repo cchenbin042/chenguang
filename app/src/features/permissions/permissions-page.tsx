@@ -51,7 +51,7 @@ export function PermissionsPage() {
         header: "描述",
         cell: ({ row }) => (
           <span className="block max-w-80 truncate text-muted-foreground">
-            {row.original.description || "—"}
+            {row.original.description || "无"}
           </span>
         ),
       },

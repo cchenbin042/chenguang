@@ -53,7 +53,7 @@ export function RolesPage() {
         header: "描述",
         cell: ({ row }) => (
           <span className="block max-w-64 truncate text-muted-foreground">
-            {row.original.description || "—"}
+            {row.original.description || "无"}
           </span>
         ),
       },
@@ -61,9 +61,9 @@ export function RolesPage() {
         id: "permissionCount",
         header: "权限数量",
         cell: ({ row }) => (
-          // 列表接口的 response_model 会裁掉 permissions，因此这里只能显示占位符
+          // 列表接口的 response_model 会裁掉 permissions，因此这里只能显示占位文案
           <span className="tabular-nums text-muted-foreground">
-            {row.original.permissions ? row.original.permissions.length : "—"}
+            {row.original.permissions ? row.original.permissions.length : "未提供"}
           </span>
         ),
       },

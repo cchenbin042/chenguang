@@ -65,7 +65,7 @@ function ShellContent() {
       <AppNavigation />
       <SidebarInset className="min-w-0">
         <header className="flex h-14 shrink-0 items-center gap-3 border-b border-border px-4 md:px-6">
-          <span className="md:hidden"><SidebarTrigger aria-label="打开导航" /></span>
+          <span className="lg:hidden"><SidebarTrigger aria-label="打开导航" /></span>
           <nav aria-label="面包屑" className="min-w-0 flex-1">
             <ol className="flex min-w-0 items-center gap-2 text-sm">
               <li className="shrink-0 font-medium">辰光管理后台</li>
