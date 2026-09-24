@@ -4,7 +4,7 @@ import { AppShell } from "@/components/layout/app-shell"
 import { ProtectedRoute } from "@/components/layout/protected-route"
 import { Skeleton } from "@/components/ui/skeleton"
 
-const LoginPage = lazy(() => import("./placeholder-pages").then(({ LoginPage }) => ({ default: LoginPage })))
+const LoginPage = lazy(() => import("@/features/auth/login-page").then(({ LoginPage }) => ({ default: LoginPage })))
 const OverviewPage = lazy(() => import("./placeholder-pages").then(({ OverviewPage }) => ({ default: OverviewPage })))
 const UsersPage = lazy(() => import("./placeholder-pages").then(({ UsersPage }) => ({ default: UsersPage })))
 const RolesPage = lazy(() => import("./placeholder-pages").then(({ RolesPage }) => ({ default: RolesPage })))
