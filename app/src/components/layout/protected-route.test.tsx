@@ -1,3 +1,4 @@
+import { useState } from "react"
 import { beforeEach, describe, expect, it, vi } from "vitest"
 import { fireEvent, render, screen } from "@testing-library/react"
 import { QueryClient } from "@tanstack/react-query"
@@ -70,6 +71,41 @@ describe("protected routes", () => {
     expect(await screen.findByRole("heading", { name: "登录" })).toBeInTheDocument()
     expect(screen.getByTestId("location")).toHaveTextContent("/login")
   })
+
+  it("keeps the desktop sidebar visible after Ctrl+B", async () => {
+    authStorage.setToken("token")
+    renderAtRoute("/overview")
+    const navigation = await screen.findByRole("navigation", { name: "主导航" })
+
+    fireEvent.keyDown(window, { key: "b", ctrlKey: true })
+
+    expect(navigation.closest('[data-slot="sidebar"]')).not.toHaveAttribute("data-collapsible", "offcanvas")
+  })
+
+  it("opens navigation in a Sheet on a narrow screen", async () => {
+    const matchMedia = vi.spyOn(window, "matchMedia").mockImplementation((media) => ({
+      matches: media.includes("max-width"),
+      media,
+      onchange: null,
+      addListener: () => {},
+      removeListener: () => {},
+      addEventListener: () => {},
+      removeEventListener: () => {},
+      dispatchEvent: () => false,
+    }))
+    try {
+      authStorage.setToken("token")
+      renderAtRoute("/overview")
+      const trigger = await screen.findByRole("button", { name: "打开导航" })
+
+      fireEvent.click(trigger)
+
+      expect(await screen.findByRole("navigation", { name: "主导航" })).toBeInTheDocument()
+      expect(screen.getByRole("dialog")).toBeInTheDocument()
+    } finally {
+      matchMedia.mockRestore()
+    }
+  })
 })
 
 describe("shared list controls", () => {
@@ -78,6 +114,19 @@ describe("shared list controls", () => {
     render(<DataToolbar searchValue="" onSearchChange={onSearchChange} />)
     fireEvent.change(screen.getByRole("searchbox"), { target: { value: "alice" } })
     expect(onSearchChange).toHaveBeenCalledWith("alice")
+  })
+
+  it("assigns distinct labels to multiple toolbars", () => {
+    render(
+      <>
+        <DataToolbar searchValue="" onSearchChange={vi.fn()} searchPlaceholder="搜索用户" />
+        <DataToolbar searchValue="" onSearchChange={vi.fn()} searchPlaceholder="搜索角色" />
+      </>,
+    )
+    const [users, roles] = screen.getAllByRole("searchbox")
+    expect(users.id).not.toBe(roles.id)
+    expect(screen.getByLabelText("搜索用户")).toBe(users)
+    expect(screen.getByLabelText("搜索角色")).toBe(roles)
   })
 
   it("disables previous on first page and changes to next page", () => {
@@ -108,5 +157,28 @@ describe("shared list controls", () => {
     expect(screen.getByText(/测试用户/)).toBeInTheDocument()
     fireEvent.click(screen.getByRole("button", { name: "确认删除" }))
     expect(onConfirm).toHaveBeenCalledOnce()
+  })
+
+  it("keeps the dialog open and disables actions while deletion is pending", () => {
+    function DialogHarness() {
+      const [open, setOpen] = useState(true)
+      const [pending, setPending] = useState(false)
+      return (
+        <ConfirmDeleteDialog
+          open={open}
+          onOpenChange={setOpen}
+          onConfirm={() => setPending(true)}
+          itemName="测试用户"
+          pending={pending}
+        />
+      )
+    }
+
+    render(<DialogHarness />)
+    fireEvent.click(screen.getByRole("button", { name: "确认删除" }))
+
+    expect(screen.getByRole("alertdialog")).toBeVisible()
+    expect(screen.getByRole("button", { name: "正在删除" })).toBeDisabled()
+    expect(screen.getByRole("button", { name: "取消" })).toBeDisabled()
   })
 })

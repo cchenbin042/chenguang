@@ -17,11 +17,11 @@ const navigation = [
 ] as const
 
 function AppNavigation() {
-  const { setOpenMobile } = useSidebar()
+  const { isMobile, setOpenMobile } = useSidebar()
   const { pathname } = useLocation()
 
   return (
-    <Sidebar collapsible="offcanvas">
+    <Sidebar collapsible={isMobile ? "offcanvas" : "none"} className={isMobile ? undefined : "sticky top-0 h-[100dvh] shrink-0"}>
       <SidebarHeader className="h-14 justify-center border-b border-sidebar-border px-4">
         <span className="text-sm font-semibold tracking-wide">辰光</span>
         <span className="text-xs text-sidebar-foreground/70">管理后台</span>
