@@ -37,9 +37,14 @@ function errorFromResponse(body: unknown, status: number): ApiError {
   return new ApiError(message, code, status, issues)
 }
 
-export async function apiRequest<T>(path: string, options: RequestInit = {}): Promise<T> {
+/** 拼接 Base URL 与请求路径；空 Base URL 时使用相对路径，交给 Vite 代理处理 */
+export function apiUrl(path: string): string {
   const baseUrl = (import.meta.env.VITE_API_BASE_URL || "").replace(/\/+$/, "")
   const requestPath = path.startsWith("/") ? path : `/${path}`
+  return `${baseUrl}${requestPath}`
+}
+
+export async function apiRequest<T>(path: string, options: RequestInit = {}): Promise<T> {
   const headers = new Headers(options.headers)
   const token = authStorage.getToken()
   if (token) headers.set("Authorization", `Bearer ${token}`)
@@ -47,7 +52,7 @@ export async function apiRequest<T>(path: string, options: RequestInit = {}): Pr
     headers.set("Content-Type", "application/json")
   }
 
-  const response = await fetch(`${baseUrl}${requestPath}`, { ...options, headers })
+  const response = await fetch(apiUrl(path), { ...options, headers })
   const text = await response.text()
   let body: unknown = null
   if (text) {

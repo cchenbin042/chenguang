@@ -5,7 +5,7 @@ import { ProtectedRoute } from "@/components/layout/protected-route"
 import { Skeleton } from "@/components/ui/skeleton"
 
 const LoginPage = lazy(() => import("@/features/auth/login-page").then(({ LoginPage }) => ({ default: LoginPage })))
-const OverviewPage = lazy(() => import("./placeholder-pages").then(({ OverviewPage }) => ({ default: OverviewPage })))
+const OverviewPage = lazy(() => import("@/features/overview/overview-page").then(({ OverviewPage }) => ({ default: OverviewPage })))
 const UsersPage = lazy(() => import("./placeholder-pages").then(({ UsersPage }) => ({ default: UsersPage })))
 const RolesPage = lazy(() => import("./placeholder-pages").then(({ RolesPage }) => ({ default: RolesPage })))
 const PermissionsPage = lazy(() => import("./placeholder-pages").then(({ PermissionsPage }) => ({ default: PermissionsPage })))

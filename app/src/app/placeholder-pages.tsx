@@ -6,10 +6,6 @@ function PlaceholderPage({ title }: { title: string }) {
   )
 }
 
-export function OverviewPage() {
-  return <PlaceholderPage title="概览" />
-}
-
 export function UsersPage() {
   return <PlaceholderPage title="用户" />
 }
