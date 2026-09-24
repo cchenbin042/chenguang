@@ -1,16 +1,15 @@
 import { StrictMode } from "react"
 import { createRoot } from "react-dom/client"
-import { BrowserRouter, Route, Routes } from "react-router-dom"
+import { BrowserRouter } from "react-router-dom"
 import { AppProviders } from "@/app/providers"
+import { AppRouter } from "@/app/router"
 import "@/index.css"
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <AppProviders>
       <BrowserRouter>
-        <Routes>
-          <Route path="*" element={<p>辰光管理后台</p>} />
-        </Routes>
+        <AppRouter />
       </BrowserRouter>
     </AppProviders>
   </StrictMode>,
