@@ -1,3 +1,5 @@
+import type { RoleRead } from "@/features/roles/types"
+
 export interface UserRead {
   id: number
   username: string
@@ -5,15 +7,13 @@ export interface UserRead {
   is_active: boolean
 }
 
-export interface UserRoleRead {
-  id: number
-  code: string
-  name: string
-  description: string | null
-}
-
+/**
+ * GET /api/v1/users/{id}/roles 的返回。
+ * roles 复用角色域的类型：后端 UserWithRolesRead.roles 就是 list[RoleRead]，
+ * 每个角色都带 permissions，因此可以直接聚合出用户的有效权限。
+ */
 export interface UserWithRolesRead extends UserRead {
-  roles: UserRoleRead[]
+  roles: RoleRead[]
 }
 
 export interface UserCreateInput {
