@@ -1,4 +1,4 @@
-from core.deps import PageParams
+from src.core.deps import PageParams
 from src.modules.role.schema import RoleAssignPermissions
 from src.modules.permission.schema import PermissionRead
 from src.core.base_schema import ResponseSchema, PageResult

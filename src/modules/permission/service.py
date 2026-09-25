@@ -1,7 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from core.base_schema import PageResult
-from core.deps import PageParams
+from src.core.base_schema import PageResult
+from src.core.deps import PageParams
 from src.core.exceptions import BizException
 from src.modules.permission.model import Permission
 from src.modules.permission.schema import PermissionCreate,PermissionUpdate

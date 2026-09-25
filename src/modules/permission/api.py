@@ -4,7 +4,7 @@ from fastapi.params import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import defer
 
-from core.deps import PageParams
+from src.core.deps import PageParams
 from src.infra.database import get_async_session
 from src.modules.permission.service import PermissionService
 from src.core.base_schema import ResponseSchema, PageResult

@@ -1,5 +1,5 @@
-from core.base_schema import PageResult
-from core.deps import PageParams
+from src.core.base_schema import PageResult
+from src.core.deps import PageParams
 from src.core.exceptions import BizException
 from src.modules.role.schema import RoleUpdate
 from src.modules.role.model import Role

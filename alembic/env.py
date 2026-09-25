@@ -40,6 +40,7 @@ from src.core.base_model import Base
 import src.modules.user.model
 import src.modules.role.model
 import src.modules.permission.model
+import src.modules.provider.model
 target_metadata = Base.metadata
 # other values from the config, defined by the needs of env.py,
 # can be acquired:

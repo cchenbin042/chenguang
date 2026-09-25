@@ -8,14 +8,14 @@ from src.infra.database import get_async_session
 from src.modules.user.schema import UserCreate, UserRead, UserWithRolesRead
 from src.modules.user.service import UserService
 
-router = APIRouter(prefix="/users", tags=["User"])
+router = APIRouter(prefix="/users", tags=["用户管理模块"])
 
 
 def get_user_service(db: AsyncSession = Depends(get_async_session)) -> UserService:
     return UserService(db)
 
 
-@router.post("", response_model=ResponseSchema[UserRead])
+@router.post("", response_model=ResponseSchema[UserRead], summary="创建用户")
 async def create_user(
     data: UserCreate,
     svc: UserService = Depends(get_user_service),
@@ -23,12 +23,12 @@ async def create_user(
     user = await svc.create_user(data)
     return ResponseSchema(data=UserRead.model_validate(user))
 
-@router.get("/me", response_model=ResponseSchema[UserRead])
+@router.get("/me", response_model=ResponseSchema[UserRead], summary="获取当前登录用户信息")
 async def get_me(current_user: User = Depends(get_current_user)):
     """获取当前登录用户信息（需要 token）"""
     return ResponseSchema(data=UserRead.model_validate(current_user))
 
-@router.get("/{user_id}", response_model=ResponseSchema[UserRead])
+@router.get("/{user_id}", response_model=ResponseSchema[UserRead], summary="获取用户详细信息")
 async def get_user(
     user_id: int,
     svc: UserService = Depends(get_user_service),
@@ -37,7 +37,7 @@ async def get_user(
     return ResponseSchema(data=UserRead.model_validate(user))
 
 
-@router.get("", response_model=ResponseSchema[PageResult[UserRead]])
+@router.get("", response_model=ResponseSchema[PageResult[UserRead]], summary="获取用户列表")
 async def list_users(
     params: PageParams = Depends(),
     svc: UserService = Depends(get_user_service),
