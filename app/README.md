@@ -56,7 +56,7 @@ app/src/
 └─ test/            MSW 服务端、默认处理器、测试渲染器
 ```
 
-每个业务域内部固定四件套：`types.ts`、`api.ts`、`queries.ts`、页面与表单组件。页面只消费 `queries.ts`，不直接调用 `api.ts`。
+每个业务域内部固定四件套：`types.ts`、`api.ts`、`queries.ts`、页面与表单组件。页面只消费 `queries.ts`，不直接调用 `api.ts`。用户域的角色管理与有效权限只读展示都内联在「用户详情」抽屉里，操作列不再单设「分配角色」入口；权限由角色决定，详情内不提供单独的授权动作。
 
 ## 与后端的接口契约
 
@@ -71,6 +71,7 @@ app/src/
 | 用户角色分配请求体是裸数组 `[1,3]` | 直接提交数组，不包 `role_ids` |
 | 角色权限分配请求体是 `{ permission_ids: [...] }` | 提交该结构 |
 | `GET /api/v1/users/{id}/roles` 返回单元素数组 | `getUserRoles()` 规范化为单个对象或 `null` |
+| `GET /api/v1/users/{id}/roles` 返回的每个角色带 `permissions` | 用户详情用它去重聚合「有效权限」，并标注每项权限来自哪个角色 |
 | 权限列表路径带尾斜杠 `/api/v1/permissions/` | 按现状对接 |
 | 角色列表的 `response_model` 是 `PageResult[PermissionRead]`，会裁掉 `permissions` | 列表的「权限数量」列显示「未提供」，真实权限只在详情页展示 |
 | 角色 / 权限勾选项一次最多加载 100 条 | 总数超过 100 时禁用保存并明确提示，不静默遗漏 |
