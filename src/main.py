@@ -16,6 +16,7 @@ from src.modules.model.api import router as model_router
 from src.modules.prompt.api import router as prompt_router
 from src.modules.knowledge.api import router as knowledge_router
 from src.modules.tool.api import router as tool_router
+from src.modules.agent.api import router as  agent_router
 
 
 # 定义上下文生命周期感知器
@@ -58,6 +59,7 @@ def create_app() -> FastAPI:
     app.include_router(prompt_router, prefix="/api/v1")
     app.include_router(knowledge_router, prefix="/api/v1")
     app.include_router(tool_router, prefix="/api/v1")
+    app.include_router(agent_router, prefix="/api/v1")
     return app
 app = create_app()
 
