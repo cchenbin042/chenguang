@@ -58,7 +58,7 @@ export function UserCreateSheet({ open, onOpenChange }: UserCreateSheetProps) {
       <SheetContent>
         <SheetHeader>
           <SheetTitle>新建用户</SheetTitle>
-          <SheetDescription>创建后可在列表中为该用户分配角色。</SheetDescription>
+          <SheetDescription>创建后可在用户详情里为该用户分配角色。</SheetDescription>
         </SheetHeader>
 
         <form className="flex flex-1 flex-col overflow-y-auto" onSubmit={onSubmit} noValidate>

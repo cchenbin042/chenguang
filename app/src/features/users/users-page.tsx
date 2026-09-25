@@ -12,7 +12,6 @@ import { useUserList } from "./queries"
 import { USER_PAGE_SIZE, type UserRead } from "./types"
 import { UserCreateSheet } from "./user-create-sheet"
 import { UserDetailSheet } from "./user-detail-sheet"
-import { UserRoleSheet } from "./user-role-sheet"
 
 const SEARCH_DEBOUNCE_MS = 300
 
@@ -22,7 +21,6 @@ export function UsersPage() {
   const [page, setPage] = useState(1)
   const [createOpen, setCreateOpen] = useState(false)
   const [detailUserId, setDetailUserId] = useState<number | null>(null)
-  const [roleUserId, setRoleUserId] = useState<number | null>(null)
 
   // 输入停顿后才提交查询，并且回到第一页
   useEffect(() => {
@@ -61,9 +59,6 @@ export function UsersPage() {
           <div className="flex justify-end gap-1">
             <Button variant="ghost" size="sm" onClick={() => setDetailUserId(row.original.id)}>
               详情
-            </Button>
-            <Button variant="ghost" size="sm" onClick={() => setRoleUserId(row.original.id)}>
-              分配角色
             </Button>
           </div>
         ),
@@ -155,13 +150,6 @@ export function UsersPage() {
         userId={detailUserId}
         onOpenChange={(open) => {
           if (!open) setDetailUserId(null)
-        }}
-      />
-      <UserRoleSheet
-        key={`user-roles-${roleUserId ?? "none"}`}
-        userId={roleUserId}
-        onOpenChange={(open) => {
-          if (!open) setRoleUserId(null)
         }}
       />
     </section>

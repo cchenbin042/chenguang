@@ -122,16 +122,17 @@ describe("UsersPage", () => {
     await waitFor(() => expect(listCalls).toBeGreaterThan(callsBefore))
   })
 
-  it("loads the selected user's roles and submits a raw role id array", async () => {
+  it("submits a raw role id array from the user detail sheet", async () => {
     const puts: { url: URL; body: unknown }[] = []
     server.use(
       http.get("/api/v1/users", () => ok({ items: users, total: 2, page: 1, page_size: 10 })),
+      http.get("/api/v1/users/:id", () => ok(users[0])),
       http.get("/api/v1/users/:id/roles", ({ params }) =>
         ok([
           {
             ...users[0],
             id: Number(params.id),
-            roles: [{ id: 1, code: "admin", name: "管理员", description: null }],
+            roles: [{ id: 1, code: "admin", name: "管理员", description: null, permissions: [] }],
           },
         ]),
       ),
@@ -148,7 +149,7 @@ describe("UsersPage", () => {
     const user = userEvent.setup()
     await screen.findByText("alice")
 
-    await user.click(screen.getAllByRole("button", { name: "分配角色" })[0])
+    await user.click(screen.getAllByRole("button", { name: "详情" })[0])
 
     expect(await screen.findByRole("checkbox", { name: "管理员" })).toBeChecked()
     expect(screen.getByRole("checkbox", { name: "编辑" })).not.toBeChecked()
@@ -183,6 +184,7 @@ describe("UsersPage", () => {
   it("blocks role assignment when the role list is truncated", async () => {
     server.use(
       http.get("/api/v1/users", () => ok({ items: users, total: 2, page: 1, page_size: 10 })),
+      http.get("/api/v1/users/:id", () => ok(users[0])),
       http.get("/api/v1/users/:id/roles", () => ok([{ ...users[0], roles: [] }])),
       http.get("/api/v1/roles/roles", () =>
         ok({ items: roleOptions, total: 120, page: 1, page_size: 100 }),
@@ -193,9 +195,21 @@ describe("UsersPage", () => {
     const user = userEvent.setup()
     await screen.findByText("alice")
 
-    await user.click(screen.getAllByRole("button", { name: "分配角色" })[0])
+    await user.click(screen.getAllByRole("button", { name: "详情" })[0])
 
     expect(await screen.findByRole("alert")).toHaveTextContent("超过一次可加载的 100 条")
     expect(screen.getByRole("button", { name: "保存" })).toBeDisabled()
+  })
+
+  it("keeps 详情 as the only row action", async () => {
+    server.use(
+      http.get("/api/v1/users", () => ok({ items: users, total: 2, page: 1, page_size: 10 })),
+    )
+
+    renderUsers()
+    await screen.findByText("alice")
+
+    expect(screen.queryByRole("button", { name: "分配角色" })).not.toBeInTheDocument()
+    expect(screen.getAllByRole("button", { name: "详情" })).toHaveLength(2)
   })
 })
