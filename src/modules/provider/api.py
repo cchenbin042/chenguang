@@ -1,13 +1,13 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from core.base_schema import ResponseSchema, PageResult
-from core.deps import PageParams
-from infra.database import get_async_session
+from src.core.base_schema import ResponseSchema, PageResult
+from src.core.deps import PageParams
+from src.infra.database import get_async_session
 from loguru import logger
 
-from modules.provider.schema import ProviderRead, ProviderCreate, ProviderUpdate
-from modules.provider.servcie import ProviderService
+from src.modules.provider.schema import ProviderRead, ProviderCreate, ProviderUpdate
+from src.modules.provider.servcie import ProviderService
 
 router = APIRouter(prefix="/provider",tags=["模型提供商管理"])
 

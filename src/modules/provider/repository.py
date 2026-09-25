@@ -3,8 +3,8 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from core.base_repository import BaseRepository
-from modules.provider.model import ModelProvider
+from src.core.base_repository import BaseRepository
+from src.modules.provider.model import ModelProvider
 from loguru import logger
 
 class ProviderRepository(BaseRepository[ModelProvider]):

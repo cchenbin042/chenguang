@@ -3,12 +3,12 @@
 # 只做"接收请求 → 调用 Service → 封装响应"。
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from core.base_schema import PageResult
-from core.deps import PageParams
-from core.exceptions import BizException
-from modules.provider.model import ModelProvider
-from modules.provider.repository import ProviderRepository
-from modules.provider.schema import ProviderCreate, ProviderRead, ProviderUpdate
+from src.core.base_schema import PageResult
+from src.core.deps import PageParams
+from src.core.exceptions import BizException
+from src.modules.provider.model import ModelProvider
+from src.modules.provider.repository import ProviderRepository
+from src.modules.provider.schema import ProviderCreate, ProviderRead, ProviderUpdate
 
 
 class ProviderService:
@@ -93,9 +93,9 @@ class ProviderService:
             # async with httpx.AsyncClient() as client:
             #     resp = await client.get(provider.endpoint, timeout=10)
             provider.status = "connected"
-            await self.repo.update(provider)
+            await self.provider_repo.update(provider)
             return {"success": True, "message": "连接成功", "latency_ms": 128}
         except Exception as e:
             provider.status = "error"
-            await self.repo.update(provider)
+            await self.provider_repo.update(provider)
             return {"success": False, "message": f"连接失败: {str(e)}"}
