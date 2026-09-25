@@ -30,6 +30,13 @@ export const handlers = [
     ok({ id: 1, username: "admin", email: "admin@example.com", is_active: true }),
   ),
   http.get("/api/v1/users", () => ok(emptyPage())),
+  // 后端该接口返回单元素数组，因此包一层数组
+  http.get("/api/v1/users/:id/roles", ({ params }) =>
+    ok([{ id: Number(params.id), username: "admin", email: "admin@example.com", is_active: true, roles: [] }]),
+  ),
+  http.get("/api/v1/users/:id", ({ params }) =>
+    ok({ id: Number(params.id), username: "admin", email: "admin@example.com", is_active: true }),
+  ),
   http.get("/api/v1/roles/roles", () => ok(emptyPage())),
   http.get("/api/v1/permissions/", () => ok(emptyPage())),
 ]
